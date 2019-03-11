@@ -159,7 +159,8 @@
       .el-tabs__item{
         padding:0 0.16rem;
         font-size:0.16rem;
-        line-height:0.42rem;
+        line-height:2;
+        height:initial;
       }
       .el-tabs__content{
         display:flex;
@@ -256,6 +257,7 @@
         position:relative;
         display:flex;
         flex:1;
+        overflow: initial;
       }
       .el-table__empty-block{
         position:absolute;
@@ -276,7 +278,7 @@
       table,thead,tbody,.el-table td, .el-table th,.user-list .el-table__header-wrapper tr{
         display:flex;
         flex:1;
-        height:inherit;
+        /* height:inherit; */
       }
       table,thead,tbody{
         flex-direction:column;
@@ -289,7 +291,9 @@
       }
       .el-table tr{
         display: flex;
-        height: 0.335rem;
+        height:5%;
+        align-items: center;
+        /* height: 0.335rem; */
       }
 
 
@@ -436,7 +440,9 @@
         line-height: 0.40rem;
         font-size: 0.2rem;
       }
-      
+      .gutter{
+        display: none;
+      }
     </style>
   </head>
   <body>

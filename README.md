@@ -15,6 +15,8 @@ cd lottery
 
 #安装依赖包
 npm install 
+cd src/
+npm install
 
 #启动项目
 npm start
