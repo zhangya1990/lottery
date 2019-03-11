@@ -2,6 +2,7 @@
 /log
 /dist
 /src/node_modules
+/src/error.log
 config.json
 data.json
 员工.xlsx
