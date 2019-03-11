@@ -1,0 +1,20 @@
+{
+  "name": "wbdm-lottery",
+  "version": "1.0.0",
+  "description": "a funny lottery tool",
+  "main": "./src/main.js",
+  "scripts": {
+    "start": "cross-env ELECTRON_ENV=development electron .",
+    "package": "cross-env ELECTRON_ENV=pruduction electron-packager ./src/ wbdm-lottery  --out ./dist --electronVersion=4.0.0 --platform=darwin,win32 --overwrite --icon=./src/assets/images/app"
+  },
+  "author": "zhangya <349836308@qq.com>",
+  "license": "MIT",
+  "dependencies": {
+    "node-xlsx": "^0.14.1"
+  },
+  "devDependencies": {
+    "cross-env": "^5.2.0",
+    "electron": "^4.0.0",
+    "electron-packager": "^13.0.1"
+  }
+}

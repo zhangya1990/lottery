@@ -1,0 +1,14 @@
+{
+  "name": "wbdm-lottery",
+  "version": "1.0.0",
+  "description": "a funny lottery tool",
+  "main": "./main.js",
+  "scripts": {
+    "start": "cross-env ELECTRON_ENV=development electron ."
+  },
+  "author": "zhangya <349836308@qq.com>",
+  "license": "MIT",
+  "dependencies": {
+    "node-xlsx": "^0.14.1"
+  }
+}

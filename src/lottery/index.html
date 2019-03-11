@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>lucky-lottery</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.min.css" crossorigin="anonymous"/>
+    <link rel="stylesheet" type="text/css" href="../assets/css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="../assets/css/wall.css"/>
+    <link rel="stylesheet" type="text/css" href="../assets/css/element-ui.min.css"/>
+
+    <style>
+      html {
+          width: 100%;
+          height: 100%;
+          font-size:100px;
+      }
+      body{
+        width: 100%;
+        height: 100%;
+        font-size:0.14rem;
+      }
+      [v-clock]{
+        display:none !important;
+      }
+      .result {
+          position: absolute;
+          width: 100%;
+          left: 0; 
+          top: 50%;
+          transform:translateY(-50%);
+          text-align: center;
+          padding: 0.1rem;
+      }
+      .result span {
+          display: inline-block;
+          font-size: 0.25rem;
+          width: 1.5rem;
+          background: #fff;
+          line-height: 0.3rem;
+          color: #000;
+          margin: 0.05rem;
+          border-radius: 0.1rem;
+          box-shadow: 0 0.05rem 0.1rem rgba(0, 0, 0, 0.8);
+          padding: 0.10rem 0;
+      }
+      button, input, optgroup, select, textarea {
+          color: inherit;
+          font: inherit;
+          margin: 0;
+          border: none;
+      }
+      button {
+          overflow: visible;
+      }
+      button, select {
+          text-transform: none;
+      }
+      button, html input[type=button], input[type=reset], input[type=submit] {
+          -webkit-appearance: button;
+          cursor: pointer;
+      }
+      .pure-button {
+          display: inline-block;
+          zoom: 1;
+          line-height: normal;
+          white-space: nowrap;
+          vertical-align: middle;
+          text-align: center;
+          cursor: pointer;
+          -webkit-user-drag: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          box-sizing: border-box;
+      }
+
+      .pure-button {
+          font-family: inherit;
+          font-size: 100%;
+          padding: .5em 1em;
+          color: #444;
+          color: rgba(0,0,0,.8);
+          border: 0 rgba(0,0,0,0);
+          background-color: #E6E6E6;
+          text-decoration: none;
+          border-radius: 0.02rem;
+      }
+      .pure-button:focus {
+          outline: 0
+      }
+      .pure-button-hover, .pure-button:hover, .pure-button:focus {
+          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#1a000000', GradientType=0);
+          background-image: -webkit-gradient(linear,0 0,0 100%,from(transparent),color-stop(40%,rgba(0,0,0,.05)),to(rgba(0,0,0,.1)));
+          background-image: -webkit-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
+          background-image: -moz-linear-gradient(top,rgba(0,0,0,.05) 0,rgba(0,0,0,.1));
+          background-image: -o-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
+          background-image: linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
+      }
+
+      .button-success, .button-error, .button-warning, .button-secondary {
+          color: white;
+          border-radius: 0.04rem;
+          text-shadow: 0 0.01rem 0.01rem rgba(0, 0, 0, 0.2);
+      }
+      .button-success {
+          background: rgb(28, 184, 65);
+      }
+      .button-error {
+          background: rgb(202, 60, 60);
+      }
+      .button-warning {
+          background: rgb(223, 117, 20);
+      }
+      .button-secondary {
+          background: rgb(66, 184, 221);
+      }
+      .tools {
+          position: absolute;
+          bottom: 0.2rem;
+          right: 0.2rem;
+          text-align: center;
+      }
+      .tools .pure-button {
+          display: inline-block;
+          margin: 0.05rem;
+          padding: 0.1rem 0;
+          text-align: center;
+          width:0.5rem;
+      }
+      .mask {
+          -webkit-filter:blur(0.05rem);
+          filter:blur(0.05rem);
+      }
+      
+      #main {
+          -webkit-transition: all 1s;
+          transition: all 1s;
+      }
+      .result-btn {
+          margin-top: 0.2rem;
+          text-align: right;
+          margin-right: 0.3rem;
+      }
+
+      .container{
+        position:relative;
+        display:flex;
+        height:100%;
+      }
+      .el-tabs{
+        flex:1;
+        display:flex;
+        flex-direction:column;
+      }
+      .el-tabs__item{
+        padding:0 0.16rem;
+        font-size:0.16rem;
+        line-height:0.42rem;
+      }
+      .el-tabs__content{
+        display:flex;
+        flex:1;
+      }
+      .el-tab-pane{
+        display:flex;
+        flex:1;
+      }
+      .el-input__inner{
+        padding:0.03rem 0.1rem;
+        line-height:0.36rem;
+        border-radius:0.04rem;
+      }
+      .title{
+          text-align: center;
+          margin: 0.4rem 0 0.2rem;
+          font-size:0.4rem;
+      }
+      .reward {
+          text-align: center;
+          height:0.5rem;
+          line-height: 0.5rem;
+      }
+
+      .reward-pepole {
+        margin: 1rem auto 0;
+        text-align: center;
+        font-size: 0.24rem;
+        width:1200px;
+        min-width:1200px;
+      }
+
+      .panel{
+        display:flex;
+        flex-direction:column;
+        box-sizing:border-box;
+        flex:1;
+        border:none;
+        margin:0;
+        padding-bottom:0.2rem;
+      }
+
+      .result-btn {
+        position: absolute;
+        top:0;
+        left:0;
+        padding-right:0.3rem;
+        width:100%;
+        text-align: right;
+        box-sizing: border-box;
+      }
+
+      .btn-list{
+        display: flex;
+        position: absolute;
+        left:0;
+        bottom:0;
+        width:100%;
+        justify-content: center;
+      }
+      .setting{
+        height:100%;
+      }
+      .user-section{
+        display:flex;
+        flex-direction:column;
+        width:100%;
+        height:100%;
+      }
+      .toolbar{
+        flex-shrink:0;
+      }
+      .user-list{
+        display:flex;
+        flex-direction:column;
+        flex:1;
+        margin:0.2rem 0;
+      }
+      .btn-item{
+        margin-right:0.2rem;
+      }
+      colgroup{
+        display:none;
+      }
+      .el-table{
+        border:none;
+      }
+      .el-table__header-wrapper{
+        display:flex;
+        height:0.4rem;
+      }
+      .el-table__body-wrapper{
+        position:relative;
+        display:flex;
+        flex:1;
+      }
+      .el-table__empty-block{
+        position:absolute;
+        width:100% !important;
+        height:100%;
+        top:0;
+        left:0;
+      }
+      .el-table tr{
+        border-bottom: 1px solid #dfe6ec;
+      }
+      .el-table td{
+        border:none;
+      }
+      .el-table th{
+        border-top: 1px solid #dfe6ec
+      }
+      table,thead,tbody,.el-table td, .el-table th,.user-list .el-table__header-wrapper tr{
+        display:flex;
+        flex:1;
+        height:inherit;
+      }
+      table,thead,tbody{
+        flex-direction:column;
+      }
+      .el-table:before{
+        display:none;
+      }
+      .el-table:after{
+        display:none;
+      }
+      .el-table tr{
+        display: flex;
+        height: 0.335rem;
+      }
+
+
+      .toolbar .el-form-item{
+        margin-bottom:0;
+      }
+      .page-bar{
+        display:flex;
+        justify-content:space-between;
+      }
+      .el-radio{
+        display:inline-block;
+      }
+
+      .el-table th>.cell{
+        display:flex;
+      }
+      .cell{
+        flex:1;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+      }
+
+      label{
+        margin:0;
+      }
+      .menu{
+        position: fixed;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1000;
+      }
+
+      .lottery{
+        position:fixed;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        z-index:10;
+      }
+      .close-mask{
+        position:absolute;
+        width:0.3rem;
+        height:0.3rem;
+        top:0.2rem;
+        right:0.2rem;
+        background-image:url('../assets/images/btn_exit.png');
+        background-size:cover;
+        background-repeat:no-repeat;
+      }
+      .transparent-menu-view .el-menu{
+        background:transparent;
+      }
+      .transparent-menu-view .el-menu-item:hover{
+        background:rgba(0,0,0,.2);
+      }
+      .prize-list{
+        position:relative;
+        flex:1;
+        margin-bottom:0.25rem;
+        overflow:auto;
+      }
+      .prize-btn{
+        float:right;
+        margin-left:0.15rem;
+      }
+      .empty-prize{
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+      }
+      .warn-color{
+        color:#e6a23c;
+      }
+      .danger-color{
+        color:#f56c6c;
+      }
+      .prizes .el-card__header{
+        padding:0.05rem 0.2rem;
+      }
+      .card-header{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+      }
+      .box-card{
+        margin-bottom:0.2rem;
+      }
+      .button-disabled{
+        opacity:0.6;
+      }
+      .choose-btn{
+        margin-right:0.2rem;
+      }
+      .el-dropdown-menu{
+        background:transparent;
+      }
+      .el-dropdown-menu__item{
+        color:#f1f1f1;
+      }
+      .el-dropdown-menu__item:hover{
+        background:rgba(0,0,0,.6);
+      }
+      .el-dropdown-menu__item.is-disabled{
+        opacity:0.6;
+      }
+      .count-input{
+        margin-right:0.2rem;
+        width:1.68rem;
+      }
+
+      .lottery-list{
+        flex:1;
+        overflow:auto;
+      }
+      .result-bg{
+        margin:0;
+        padding-bottom:0.2rem;
+        width:100%;
+        background-image:  url('../assets/images/bg-2.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        color: orange;
+      }
+
+      .lottery-list h2{
+        font-size: 0.3rem;
+        margin: 0.1rem 0 0.15rem;
+      }
+      .lottery-list::-webkit-scrollbar {
+          display: none;
+      }
+      .prize-item{
+        margin-bottom: 0.4rem;
+        overflow: hidden;
+      }
+      .item-name {
+        width: 2rem;
+        display: inline-block;
+        line-height: 0.40rem;
+        font-size: 0.2rem;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <div class="container" :class="[panelStatus=='result' ? 'result-bg' : '']" id="root" v-clock>
+      <div class="menu" :class="[panelStatus=='lottery' || panelStatus=='result'?'transparent-menu-view':'']">
+        <el-col>
+          <el-menu
+            default-active="1"
+            class="el-menu-vertical"
+            @select="handleSelect"
+            :collapse="isCollapse"
+            background-color="#545c64"
+            text-color="#fff"
+            active-text-color="#ffd04b">
+            
+            <el-menu-item index="1">
+              <i class="el-icon-setting"></i>
+              <span slot="title">设置</span>
+            </el-menu-item>
+            <el-menu-item index="2" disabled>
+              <i class="el-icon-d-arrow-right "></i>
+              <span slot="title">抽奖</span>
+            </el-menu-item>
+            <el-menu-item index="3">
+              <i class="el-icon-document"></i>
+              <span slot="title">查看结果</span>
+            </el-menu-item>
+            <el-menu-item index="4">
+                <i class="el-icon-circle-close"></i>
+                <span slot="title">退出</span>
+              </el-menu-item>
+          </el-menu>
+        </el-col>
+      </div>
+
+      <!-- setting begin -->
+      <el-tabs v-model="activeName" v-show="panelStatus=='setting'">
+        <el-tab-pane label="用户管理" name="users">
+            <div class="panel">
+                <div class="setting">
+
+                  <div class="user-section">
+        
+                    <!-- 工具条 -->
+                    <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+                      <el-form :inline="true" :model="filters">
+                        <el-form-item>
+                          <el-input v-model="filters.id" placeholder="工号"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                          <el-input v-model="filters.name" placeholder="姓名"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                          <el-button type="primary" :disabled="!hasFilters" v-on:click="getUsers">查询</el-button>
+                        </el-form-item>
+                        <el-form-item>
+                          <el-button type="info" :disabled="!isSearch || !hasFilters" v-on:click="quitSearch">退出查询</el-button>
+                        </el-form-item>
+                        <el-form-item>
+                          <el-button type="primary" @click="handleImport">从Excel导入</el-button>
+                        </el-form-item>
+                        <el-form-item>
+                          <el-button type="primary" @click="handleAdd">新增</el-button>
+                        </el-form-item>
+                      </el-form>
+                    </el-col>
+                  
+                    <!--列表-->
+                    <el-table class="user-list" 
+                      :data="currentUsers" 
+                      highlight-current-row 
+                      @selection-change="selsChange" 
+                      style="width: 100%;"
+                      :default-sort="{prop: 'id'}"
+                      @sort-change="sortChange"
+                    >
+                      <el-table-column type="selection">
+                      </el-table-column>
+                      <el-table-column type="index" label="序号">
+                          <template scope="scope">
+                            {{totalIndex(scope.$index)}}
+                          </template>
+                      </el-table-column>
+                      <el-table-column prop="id" label="工号" sortable='custom'>
+                      </el-table-column>
+                      <el-table-column prop="name" label="姓名" sortable='custom'>
+                      </el-table-column>
+                      <el-table-column prop="sex" label="性别" :formatter="formatSex">
+                      </el-table-column>
+                      <el-table-column label="操作" width="150">
+                        <template scope="scope">
+                          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                          <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                
+                    <!--工具条-->
+                    <el-col :span="24" class="toolbar page-bar">
+                      <el-button type="danger" @click="batchRemove" :disabled="sels.length===0">批量删除</el-button>
+                      <el-pagination layout="total,prev, pager, next" @current-change="handleCurrentChange" :page-size="pageSize" :total="isSearch ? searchedUsers.length : users.length" style="float:right;">
+                      </el-pagination>
+                    </el-col>
+        
+                  </div>
+                </div>
+              </div>
+          
+        </el-tab-pane>
+        <el-tab-pane label="奖项管理" name="prizes">
+          <div class="panel">
+            <div class="prize-list" >
+              <div class="prizes" v-if="prizes.length">
+                  <el-card class="box-card" v-for="(prize,index) in prizes" :key="prize.id+'_'+prize.name">
+                    <div slot="header" class="card-header">
+                      <span>{{prize.name}}</span>
+                      <div class="card-btns">
+                          <el-button class=""  type="text" @click="editPrizeHandler(prize)">编辑</el-button>
+                          <el-button class="warn-color"  type="text" @click="resetPrizeHandler(prize)">重置</el-button>
+                          <el-button class="danger-color"  type="text" @click="deletePrizeHandler(prize)">删除</el-button>
+                      </div>
+                    </div>
+                    <div class="text item">
+                      {{'奖项说明: ' +  prize.des}}
+                    </div>
+                    <div class="text item">
+                      {{'奖品数量: ' +  prize.total}}
+                    </div>
+                    <div class="text item" v-if="prize.result.length">
+                      {{'中奖名单: ' +  prize.result.map(i=>i.id+' '+i.name).join('、')}}
+                    </div>
+                    <div class="text item" v-if="prize.result.length">
+                      {{prize.result.length == prize.total ? '已抽完' : '已抽取'+prize.result.length+'个,剩余'+(prize.total-prize.result.length)+'个'}}
+                    </div>
+                    <div class="text item" :style="{color:prize.color}">
+                      {{'奖品颜色: ' +  prize.color}}
+                    </div>
+                  </el-card>
+              </div>
+              <div class="empty-prize" v-if="!prizes.length">暂无数据</div>
+            </div>
+            <div class="toolbar">
+              <el-button type="primary" class="prize-btn" @click="handleAddPrize">新增</el-button>
+              <el-button type="info" class="prize-btn" @click="handleResetPrizes">全部重置</el-button>
+              <el-button type="warning" class="prize-btn" @click="handleResetPrize">恢复默认</el-button>
+            </div>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+      <!-- setting end -->
+
+      <!-- lottery begin -->
+      <div class="lottery" v-show="panelStatus=='lottery'">
+        <!-- main begin -->
+        <div id="main" class="wall" :class="[showMask?'mask':'']">
+
+          <div class="btn-list">
+            <el-dropdown class="choose-btn"  @command="handleCommand">
+              <el-button type="info" :disabled="!canDoLottery">
+                {{preparedPrize ? preparedPrize.name : '选择奖项'}}<i class="el-icon-arrow-up el-icon--right"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item v-for="prize in prizes" :command="prize" :disabled="prize.total==prize.result.length">{{prize.name}}</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+
+            <el-input class="count-input" type="number" v-model="selected" placeholder="请输入本次抽奖数量"></el-input>
+
+            <button
+              v-for="value in btns"
+              @click="countSelect(value)"
+              class="pure-button btn-item"
+              :class="{ 'button-error': selected == value}"
+            >
+              {{value}}
+            </button>
+
+            <button 
+              class="pure-button"
+              @click="toggle"
+              :class="[{'button-secondary': !running,
+                      'button-success': running},'btn-item',!canDoLottery?'button-disabled':'']"
+            >
+              {{running?'停!':'开始'}}
+            </button>
+          </div>
+        </div>
+        <!-- main end -->
+
+        <!-- result begin -->
+        <div id="result" class="result" v-show="showMask">
+          <div v-show="result.length">
+            <span v-for="(item,index) in result">{{item && item.name}}</span>
+          </div>
+          <div v-show="!result.length">已抽完</div>
+        </div>
+        <!-- result end -->
+        <div class="close-mask" v-show="showMask" @click="closeMask"></div>
+      </div>
+      <!-- lottery end -->
+
+
+      <!-- lottery results begin -->
+      <div class="lottery-list" v-show="panelStatus=='result'">
+        <h1 class="title"></h1>
+        <div id="reward-area" class="reward-pepole row">
+          <div class="prize-item" v-for="prize in reversedPrizes" :key="prize.id">
+            <h2>{{prize.name}}</h2>
+            <div class="prize-item-result">
+              <span class="item-name" v-for="user in prize.result" :key="user.id">{{user.id+' '+user.name}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- lottery results end -->
+      
+      <!--编辑用户界面-->
+      <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
+          <el-form :model="editForm" label-width="0.8rem" :rules="editFormRules" ref="editForm">
+            <el-form-item label="工号" prop="id">
+              <el-input v-model="editForm.id" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="姓名" prop="name">
+              <el-input v-model="editForm.name" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="性别">
+              <el-radio-group v-model="editForm.sex">
+                <el-radio class="radio" :label="1">男</el-radio>
+                <el-radio class="radio" :label="0">女</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click.native="editFormVisible = false">取消</el-button>
+            <el-button type="primary" @click.native="editSubmit">提交</el-button>
+          </div>
+        </el-dialog>
+      
+        <!--新增用户界面-->
+        <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
+          <el-form :model="addForm" label-width="0.8rem" :rules="addFormRules" ref="addForm">
+            <el-form-item label="工号" prop="id">
+                <el-input v-model="addForm.id" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="姓名" prop="name">
+              <el-input v-model="addForm.name" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="性别">
+              <el-radio-group v-model="addForm.sex">
+                <el-radio class="radio" :label="1">男</el-radio>
+                <el-radio class="radio" :label="0">女</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click.native="addFormVisible = false">取消</el-button>
+            <el-button type="primary" @click.native="addSubmit">提交</el-button>
+          </div>
+        </el-dialog>
+  
+        <!--编辑奖品界面-->
+        <el-dialog title="编辑" v-model="editPrizeVisible" :close-on-click-modal="false">
+          <el-form :model="editPrize" label-width="0.80rem" :rules="editPrizeRules" ref="editPrizeRef">
+            <el-form-item label="奖品名称" prop="name">
+              <el-input v-model="editPrize.name" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="奖品说明" prop="des">
+              <el-input v-model="editPrize.des" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="奖品数量" prop="total">
+              <el-input type="number" v-model="editPrize.total"></el-input>
+            </el-form-item>
+            <el-form-item label="奖品颜色" prop="color">
+              <el-color-picker v-model="editPrize.color"></el-color-picker>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click.native="editPrizeVisible = false">取消</el-button>
+            <el-button type="primary" @click.native="editPrizeSubmit">提交</el-button>
+          </div>
+        </el-dialog>
+  
+        <!--新增奖品界面-->
+        <el-dialog title="新增" v-model="addPrizeVisible" :close-on-click-modal="false">
+          <el-form :model="addPrize" label-width="0.80rem" :rules="addPrizeRules" ref="addPrizeRef">
+            <el-form-item label="奖品名称" prop="name">
+              <el-input v-model="addPrize.name" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="奖品说明" prop="des">
+              <el-input v-model="addPrize.des" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="奖品数量" prop="total">
+              <el-input type="number" v-model="addPrize.total" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="奖品颜色" prop="color">
+              <el-color-picker v-model="addPrize.color"></el-color-picker>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click.native="addPrizeVisible = false">取消</el-button>
+            <el-button type="primary" @click.native="addPrizeSubmit">提交</el-button>
+          </div>
+        </el-dialog>
+      
+
+    </div>
+    <!-- container end -->
+      
+    </body>
+
+    
+    <script  src="../assets/js/vue.min.js"></script>
+    <script  src="../assets/js/element-ui.min.js"></script>
+    <!-- <script  src="../assets/js/element-ui.common.js"></script> -->
+    <script  src="../assets/js/tagcanvas.js"></script>
+
+    <script>
+      const path = require('path');
+      const fs = require('fs');
+      const xlsx = require('node-xlsx');
+
+      const {ipcRenderer,remote} = require('electron');
+      const {dialog} = remote;
+      const {fsDataService,LotteryService} = require('./lotteryService');
+
+
+      //计算font-size
+      (function(){
+        var __windowInnerWidth = 1440,
+          __maxInnerWidth = 1920;
+        var __calcFontSizeTimer__ = null;
+
+        function calcFontsize(innerWidth) {
+            var $scale = 1440;
+            var fontSize = (innerWidth / $scale) * 100 + "px";
+            document.documentElement.style.fontSize = fontSize;
+        }
+        window.onresize = function() {
+            if (__windowInnerWidth == window.innerWidth) return;
+            if (window.innerWidth <= 1440) {
+                __windowInnerWidth = 1440;
+            } else {
+                __windowInnerWidth = window.innerWidth;
+            }
+            if (__windowInnerWidth > __maxInnerWidth)
+                __windowInnerWidth = __maxInnerWidth;
+            if (__calcFontSizeTimer__) clearTimeout(__calcFontSizeTimer__);
+            __calcFontSizeTimer__ = setTimeout(function() {
+                calcFontsize(__windowInnerWidth);
+            }, 1);
+        };
+        calcFontsize(__windowInnerWidth);
+        setTimeout(function() {
+            window.onresize();
+        }, 100);
+      }());
+      
+
+
+      //接受命令
+      ipcRenderer.on('global-shortcut', (event, arg) => {
+          switch (arg) {
+              case 'novoice': //关闭背景音乐
+                  currentAudio.paused ? currentAudio.play() : currentAudio.pause();
+                  break;
+          }
+      })
+
+      /**
+      * 播放器
+      * 
+      */
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      let rollingAudio = createAudio('musicOfRolling', true);
+      let drawAudio = createAudio('musicOfDraw', false);
+      let currentAudio = rollingAudio;
+      /**
+      * 创建音乐元素
+      * @param {string} music 
+      * @param {bool} loop 
+      */
+      function createAudio(music, loop) {
+          let audioCtx = new AudioContext();
+          let audio = new Audio();
+          audio.src = '../assets/musics/' + music + '.mp3';
+          audio.currentTime = 0;
+          audio.loop = loop;
+          let track = audioCtx.createMediaElementSource(audio);
+          track.connect(audioCtx.destination);
+          if (audioCtx.state === 'suspended') {
+              audioCtx.resume();
+          }
+          return audio;
+      }
+
+      const docTitle = remote.getGlobal('config').title;
+      
+      function speed(){
+        return [0.1 * Math.random() + 0.01, -(0.1 * Math.random() + 0.01)]
+      }
+
+      var lottery = new Vue({
+        el:'#root',
+        data(){
+          return {
+            panelStatus:'setting',
+            isSearch:false,
+            pageIndex:0,
+            pageSize:20,
+            activeName:'users',
+            users:[],
+            searchedUsers:[],
+            prizes:[],
+            result:[],
+            selected: '',
+            running: false,
+            btns: [
+                30, 20,10, 5, 3, 1
+            ],
+            showMask:false,
+            showResult:false,
+            sels:[],//选中删除列
+            filters: {
+              name: '',
+              id:''
+            },
+            addFormVisible:false,
+            addForm:{
+              id:0,
+              name:'',
+              sex:-1
+            },
+            addPrizeVisible:false,
+            addPrize:{
+              name:'',
+              des:'',
+              total:0,
+              color:'#FFB700'
+            },
+            editFormVisible:false,
+            editForm:{
+              id:'',
+              name:'',
+              sex:-1
+            },
+            editPrizeVisible:false,
+            editPrize:{
+              name:'',
+              des:'',
+              total:0,
+              color:''
+            },
+            editFormRules: {
+              name: [
+                { required: true, message: '请输入姓名', trigger: 'blur' }
+              ]
+            },
+            addFormRules: {
+              name: [
+                { required: true, message: '请输入姓名', trigger: 'blur' }
+              ]
+            },
+            editPrizeRules: {
+              name: [
+                { required: true, message: '请输入奖品名称', trigger: 'blur' }
+              ],
+              total: [
+                { required: true,message: '请输入奖品数量', trigger: 'blur',transform:value=>value.toString()}
+              ]
+            },
+            addPrizeRules: {
+              name: [
+                { required: true, message: '请输入奖品名称', trigger: 'blur' }
+              ],
+              total: [
+                { required: true,message: '请输入奖品数量', trigger: 'blur',transform:value=>value.toString() }
+              ]
+            },
+            isCollapse:true,
+            lotteryService:null,
+            preparedPrize:null
+          }
+        },
+        computed:{
+          currentUsers(){
+            let users = this.users;
+            if(this.isSearch && this.hasFilters){
+              this.searchedUsers = users = users.filter(u=>{
+                return (!!this.filters.id && u.id.toString().indexOf(this.filters.id)>-1)  || (!!this.filters.name&&u.name.indexOf(this.filters.name)>-1)
+              })
+            }
+            
+            return users.slice(this.pageIndex*this.pageSize,(this.pageIndex+1)*this.pageSize)
+          },
+          hasFilters(){
+            return this.filters.id || this.filters.name
+          },
+          canDoLottery(){
+            return this.lotteryService._prizeIndex > -1
+          },
+          reversedPrizes(){
+            return this.prizes.reverse()
+          }
+        },
+        beforeMount(){
+          const dataPath = path.join(__dirname,'../../data.json');
+          this.lotteryService = new LotteryService(new fsDataService(dataPath));
+          this.lotteryService.getLotteryData().then(data=>{
+            this.users = data.users;
+            this.prizes = data.prizes;
+
+            if(this.presorts){
+              this.sortChange(this.presorts);
+              this.presorts = null;
+            }
+
+            if(this.panelStatus == 'lottery'){
+              this.initCanvas();
+            }
+          })
+        },
+        mounted(){
+        },
+        watch:{
+          users(){
+            if(this.canvas){
+              this.updateCanvas();
+              this.setPreparedPrize();
+            }
+          },
+          prizes(){
+            if(this.canvas){
+              this.updateCanvas();
+              this.setPreparedPrize();
+            }
+          },
+          hasFilters(val){
+            if(!val){
+              this.isSearch = false
+            }
+          },
+          
+        },
+        methods:{
+          setPreparedPrize(){
+            this.preparedPrize = this.preparedPrize && this.preparedPrize.total !== this.preparedPrize.result.length ? this.preparedPrize : this.lotteryService._currentPrize;
+          },
+          formatId(user){
+            if(!isNaN(user.id)){
+              return user.id
+            }
+            if(typeof user.id == 'string' && user.id.indexOf('.')>-1){
+              return user.id.split('.')[1]
+            }
+          },
+          sortById(order='ascending'){
+            this.users = this.users.sort((a,b)=>{
+              const res = this.formatId(a)-this.formatId(b);
+              return order == 'descending' ? -1*res : res
+            })
+          },
+          sortByName(order='ascending'){
+            this.users = this.users.sort((a,b)=>{
+              return order == 'descending' ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name)
+            })
+          },
+          sortChange({prop,order}){
+            if(!this.users.length){
+              this.cacheSortable({prop,order})
+              return
+            }
+            if(prop == 'id'){
+              return this.sortById(order)
+            }
+            if(prop == 'name'){
+              return this.sortByName(order)
+            }
+          },
+          cacheSortable(sortable){
+            this.presorts = sortable
+          },
+          totalIndex(index){
+            return this.pageIndex*this.pageSize+index+1
+          },
+          createHTML(){
+            var _this = this;
+            var html = [ '<ul>' ];
+            this.users.forEach(function(item, index){
+                item.index = index;
+                var color = _this.lotteryService.isChoosed(item) || 'white';
+                html.push('<li><a href="#" style="color: ' + color + ';">' + item.name + '</a></li>');
+            });
+            html.push('</ul>');
+            return html.join('');
+          },
+          initCanvas(){
+            var canvas = document.createElement('canvas');
+            canvas.id = 'myCanvas';
+            canvas.width = document.body.offsetWidth;
+            canvas.height = document.body.offsetHeight;
+            document.getElementById('main').appendChild(canvas);
+            canvas.innerHTML = this.createHTML();
+            this.canvas = canvas;
+            TagCanvas.Start('myCanvas', '', {
+                textColour: null,
+                initial: speed(),
+                dragControl: 1,
+                textHeight: 14
+            });
+          },
+          formatSex: function (row, column) {
+            return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
+          },
+          add(data){
+            return this.lotteryService.registerUserAndSave(data)
+          },
+          modify(data){
+            return this.lotteryService.modifyUser(data._id,data)
+          },
+          remove(ids){
+            return this.lotteryService.removeUser(ids)
+          },
+          handleCurrentChange(index){
+            this.pageIndex = index-1;
+          },
+          getUsers(){
+            this.pageIndex = 0;
+            this.isSearch = true;
+          },
+          quitSearch(){
+            this.filters.id = '';
+            this.filters.name = '';
+            this.pageIndex = 0;
+            this.isSearch = false;
+            this.searchedUsers = [];
+          },  
+          //导入
+          handleImport(){
+            dialog.showOpenDialog({
+              title:'请选择文件',
+              filters:[{
+                name:'Excel',
+                extensions:['xlsx','xls']
+              }],
+              properties:['openFile']
+            },filePaths=>{
+              if(!filePaths){
+                return
+              }
+              const [xlsPath] = filePaths;
+              let raw;
+              try{
+                raw = xlsx.parse(xlsPath);
+                const result = raw[0];
+                const users = result.data.slice(1);
+                this.parsXlSData(users);
+              }catch(e){
+                console.log(e)
+                this.$message({
+                  message: '数据格式错误',
+                  type: 'error'
+                });
+              }
+            })
+          },
+          parsXlSData(users){
+            users.forEach(u=>{
+              const [id,name,sex] = u;
+              this.lotteryService.registerUser({id,name,sex:sex == '男' ? 1 : sex == '女' ? 0 : -1});
+            });
+            this.lotteryService.saveData().then(({users})=>{
+              this.users = users;
+              this.sortById();
+              this.$message({
+                  message: '导入成功',
+                  type: 'success'
+                });
+            })
+          },
+          //删除
+          handleDel(index, row) {
+            this.$confirm('确认删除该记录吗?', '提示', {
+              type: 'warning'
+            }).then(() => {
+              this.remove([row.id]).then((users) => {
+                this.$message({
+                  message: '删除成功',
+                  type: 'success'
+                });
+                this.users = users;
+              });
+            })
+          },
+          //显示编辑界面
+          handleEdit(index, row) {
+            this.editFormVisible = true;
+            this.editForm = Object.assign({_id:row.id}, row);
+          },
+          //显示编辑奖品界面
+          editPrizeHandler(prize){
+            this.editPrizeVisible = true;
+            this.editPrize = Object.assign({_id:prize.id}, prize);
+          },
+          resetPrizeHandler(prize){
+            this.$confirm('确认重置该记录吗?重置后，该奖项的中奖纪录清空', '提示', {
+              type: 'warning'
+            }).then(() => {
+                this.lotteryService.resetPrize(prize.id).then(prizes => {
+                  this.$message({
+                    message: '重置成功',
+                    type: 'success'
+                  });
+                  this.prizes = prizes;
+                });
+            })
+          },
+          deletePrizeHandler(prize){
+            this.$confirm('确认删除该记录吗?', '提示', {
+              type: 'warning'
+            }).then(() => {
+                this.lotteryService.removePrize(prize.id).then(prizes => {
+                  this.$message({
+                    message: '删除成功',
+                    type: 'success'
+                  });
+                  this.prizes = prizes;
+                });
+            })
+          },
+          //显示新增界面
+          handleAdd() {
+            this.addFormVisible = true;
+            this.addForm = {
+              id:'',
+              name: '',
+              sex: -1,
+            };
+          },
+          handleAddPrize() {
+            this.addPrizeVisible = true;
+            this.addPrize = {
+              name: '',
+              des:'',
+              total:0,
+              color:'#FFB700'
+            };
+          },
+          handleResetPrize: function () {
+            this.$confirm('确认恢复至默认奖项么，恢复后，将清除所有新增奖项及中奖记录，只保留默认奖项', '警告', {}).then(() => {
+              this.lotteryService.resetPrizes().then(prizes=>{
+                this.prizes=prizes
+              })
+            })
+          },
+          handleResetPrizes: function () {
+            this.$confirm('确认重置所有奖项么，重置后，将清除所有奖项中奖记录', '警告', {}).then(() => {
+              this.lotteryService.clearPrizes().then(prizes=>{
+                this.prizes=prizes
+              })
+            })
+          },
+          //编辑人物
+          editSubmit: function () {
+            this.$refs.editForm.validate((valid) => {
+              if (valid) {
+                this.$confirm('确认提交吗？', '提示', {}).then(() => {
+                  let para = Object.assign({}, this.editForm);
+                  this.modify(para).then(users => {
+                    this.$message({
+                      message: '提交成功',
+                      type: 'success'
+                    });
+                    this.$refs['editForm'].resetFields();
+                    this.editFormVisible = false;
+                    this.users = users;
+                  });
+                });
+              }
+            });
+          },
+          //编辑奖项
+          editPrizeSubmit(){
+            this.$refs.editPrizeRef.validate((valid) => {
+              if (valid) {
+                this.$confirm('确认提交吗？', '提示', {}).then(() => {
+                  let para = Object.assign({}, this.editPrize);
+                  this.lotteryService.modifyPrize(this.editPrize._id,this.editPrize).then(prizes => {
+                    this.$message({
+                      message: '提交成功',
+                      type: 'success'
+                    });
+                    this.$refs['editPrizeRef'].resetFields();
+                    this.editPrizeVisible = false;
+                    this.prizes = prizes;
+                  });
+                });
+              }
+            });
+          },
+          //新增
+          addSubmit: function () {
+            this.$refs.addForm.validate((valid) => {
+              if (valid) {
+                this.$confirm('确认提交吗？', '提示', {}).then(() => {
+                  let para = Object.assign({}, this.addForm);
+                  this.add(para).then(users => {
+                    this.$message({
+                      message: '提交成功',
+                      type: 'success'
+                    });
+                    this.$refs['addForm'].resetFields();
+                    this.addFormVisible = false;
+                    this.users = users;
+                  })
+                });
+              }
+            });
+          },
+          //新增奖项
+          addPrizeSubmit(){
+            this.$refs.addPrizeRef.validate((valid) => {
+              if (valid) {
+                this.$confirm('确认提交吗？', '提示', {}).then(() => {
+                  let para = Object.assign({}, this.addPrize);
+                  this.lotteryService.registerPrizeAndSave(para)
+                    .then(prizes => {
+                      this.$message({
+                        message: '提交成功',
+                        type: 'success'
+                      });
+                      this.$refs['addPrizeRef'].resetFields();
+                      this.addPrizeVisible = false;
+                      this.prizes = prizes;
+                    })
+                });
+              }
+            });
+          },
+          selsChange: function (sels) {
+            this.sels = sels;
+          },
+          //批量删除
+          batchRemove: function () {
+            var ids = this.sels.map(item => item.id).toString();
+            this.$confirm('确认删除选中记录吗？', '提示', {
+              type: 'warning'
+            }).then(() => {
+              this.remove(ids).then((users) => {
+                this.$message({
+                  message: '删除成功',
+                  type: 'success'
+                });
+                this.users = users;
+              });
+            })
+          },
+          toggle: function(){
+            const _this = this;
+            if(this.running){
+                this.showMask = true;
+                TagCanvas.SetSpeed('myCanvas', speed());
+                let curPrize = this.preparedPrize;
+
+                this.lotteryService.doLottery(curPrize.id,this.tempLotteryCount).then(({prizes,result})=>{
+                  if(result.length > 0 && !!prizes){
+                    this.result = result;
+                    this.prizes = prizes;
+                  }else{
+                    this.showMask = false;
+                    this.result = [];
+                    this.$message({
+                      message: '该轮抽奖已完成',
+                      type: 'warning'
+                    });
+                  }
+                  //关闭抽奖音乐
+                  rollingAudio.pause();
+                  //打开抽奖结果音乐
+                  drawAudio.play().then(() => {
+                      currentAudio = drawAudio;
+                      drawAudio.addEventListener('ended', function (event) {
+                          currentAudio = rollingAudio;
+                      }, {
+                          once: true
+                      })
+                  });
+                  this.running = !this.running;
+                })
+            } else {
+              if(!this.canDoLottery){
+                this.$message({
+                    message: '所有抽奖已完成',
+                    type: 'warning'
+                });
+                return
+              }
+              const currentPrize = this.preparedPrize;
+              const canLotteryLength = currentPrize.total - currentPrize.result.length;
+              const count = this.selected ? this.selected <  canLotteryLength ? this.selected : canLotteryLength :canLotteryLength
+              this.tempLotteryCount = count;
+              this.$confirm(`是否要抽取${currentPrize.name}${count}个？`, '提示', {
+                type: 'message'
+              }).then(() => {
+                rollingAudio.play().then(() => {
+                    currentAudio = rollingAudio;
+                });
+                TagCanvas.SetSpeed('myCanvas', [3, 1]);
+                this.running = !this.running;
+              })
+            }
+          },
+          handleCommand(p){
+            this.preparedPrize = p;
+          },
+          closeMask(){
+            this.result = [];
+            this.showMask = false;
+          },
+          updateCanvas(){
+            this.canvas.innerHTML = this.createHTML();
+            TagCanvas.Reload('myCanvas');
+          },
+          countSelect(val){
+            this.selected = val;
+          },
+          getIndexByState(){
+            switch (this.panelStatus){
+              case 'setting':
+                return 1
+              case 'lottery':
+                return 2
+              case 'result':
+                return 3
+              default:
+                return 4
+            }
+          },
+          handleSelect(index){
+            const curIndex = this.getIndexByState();
+            if(curIndex == index){
+              return
+            }
+            if(index == 1){
+              this.panelStatus = 'setting'
+            }
+            if(index == 2){
+              this.panelStatus = 'lottery';
+
+              if(this.prizes.length && !this.preparedPrize){
+                this.preparedPrize = this.lotteryService._currentPrize;
+              }
+              if(!this.canvas){
+                this.initCanvas();
+              }
+            }
+            if(index == 3){
+              this.panelStatus = 'result';
+              document.querySelector('.title').innerHTML = docTitle;
+            }
+            if(index == 4){
+              this.$confirm('确认退出么？', '提示', {
+                type: 'warning'
+              }).then(() => {
+                remote.app.quit()
+              })
+            }
+
+            if(this.panelStatus !== 'lottery'){
+              currentAudio.pause();
+            } 
+          },
+        }
+      })
+    </script>
+  </body>
+</html>
