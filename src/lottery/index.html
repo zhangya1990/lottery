@@ -177,8 +177,8 @@
       }
       .title{
           text-align: center;
-          margin: 0.4rem 0 0.2rem;
-          font-size:0.4rem;
+          margin: 1rem 0 0.2rem;
+          font-size:0.5rem;
       }
       .reward {
           text-align: center;
@@ -427,8 +427,8 @@
       }
 
       .lottery-list h2{
-        font-size: 0.3rem;
-        margin: 0.1rem 0 0.15rem;
+        font-size: 0.36rem;
+        margin: 0.1rem 0 0.3rem;
       }
       .lottery-list::-webkit-scrollbar {
           display: none;
@@ -441,7 +441,7 @@
         width: 2rem;
         display: inline-block;
         line-height: 0.40rem;
-        font-size: 0.2rem;
+        font-size: 0.24rem;
       }
       .el-table .gutter{
         display: none;
@@ -472,7 +472,7 @@
               <i class="el-icon-d-arrow-right "></i>
               <span slot="title">抽奖</span>
             </el-menu-item>
-            <el-menu-item index="3">
+            <el-menu-item index="3" v-show="false">
               <i class="el-icon-document"></i>
               <span slot="title">查看结果</span>
             </el-menu-item>
@@ -653,12 +653,12 @@
 
       <!-- lottery results begin -->
       <div class="lottery-list" v-show="panelStatus=='result'">
-        <h1 class="title"></h1>
+        <h1 class="title">{{docTitle}}</h1>
         <div id="reward-area" class="reward-pepole row">
-          <div class="prize-item" v-for="prize in reversedPrizes" :key="prize.id">
-            <h2>{{prize.name}}</h2>
+          <div class="prize-item">
+            <h2>{{curPrizeResult.prizeName}}</h2>
             <div class="prize-item-result">
-              <span class="item-name" v-for="user in prize.result" :key="user.id">{{user.id+' '+user.name}}</span>
+              <span class="item-name" v-for="user in curPrizeResult.results" :key="user.id">{{user.id+' '+user.name}}</span>
             </div>
           </div>
         </div>
@@ -854,6 +854,7 @@
         el:'#root',
         data(){
           return {
+            docTitle,
             panelStatus:'setting',
             isSearch:false,
             pageIndex:0,
@@ -929,7 +930,8 @@
             },
             isCollapse:true,
             lotteryService:null,
-            preparedPrize:null
+            preparedPrize:null,
+            curPrizeResult:{prizeName:'',results:[]}
           }
         },
         computed:{
@@ -1308,7 +1310,6 @@
           toggle: function(){
             const _this = this;
             if(this.running){
-                this.showMask = true;
                 TagCanvas.SetSpeed('myCanvas', speed());
                 let curPrize = this.preparedPrize;
 
@@ -1316,8 +1317,12 @@
                   if(result.length > 0 && !!prizes){
                     this.result = result;
                     this.prizes = prizes;
+                    this.curPrizeResult = {
+                      prizeName:curPrize.name,
+                      results:result
+                    };
+                    this.panelStatus = 'result';
                   }else{
-                    this.showMask = false;
                     this.result = [];
                     this.$message({
                       message: '该轮抽奖已完成',
@@ -1348,16 +1353,31 @@
               const currentPrize = this.preparedPrize;
               const canLotteryLength = currentPrize.total - currentPrize.result.length;
               const count = this.selected ? this.selected <  canLotteryLength ? this.selected : canLotteryLength :canLotteryLength
+              if(count>this.users.length){
+                this.$message({
+                    message: '请设置抽奖数量',
+                    type: 'warning'
+                });
+                return
+              }
+              if(count==0){
+                this.$message({
+                    message: '该轮抽奖已完成',
+                    type: 'warning'
+                });
+                return
+              }
+
               this.tempLotteryCount = count;
-              this.$confirm(`是否要抽取${currentPrize.name}${count}个？`, '提示', {
-                type: 'message'
-              }).then(() => {
+              // this.$confirm(`是否要抽取${currentPrize.name}${count}个？`, '提示', {
+              //   type: 'message'
+              // }).then(() => {
                 rollingAudio.play().then(() => {
                     currentAudio = rollingAudio;
                 });
                 TagCanvas.SetSpeed('myCanvas', [3, 1]);
                 this.running = !this.running;
-              })
+              // })
             }
           },
           handleCommand(p){
@@ -1404,10 +1424,7 @@
                 this.initCanvas();
               }
             }
-            if(index == 3){
-              this.panelStatus = 'result';
-              document.querySelector('.title').innerHTML = docTitle;
-            }
+
             if(index == 4){
               this.$confirm('确认退出么？', '提示', {
                 type: 'warning'
