@@ -472,7 +472,7 @@
               <i class="el-icon-d-arrow-right "></i>
               <span slot="title">抽奖</span>
             </el-menu-item>
-            <el-menu-item index="3" v-show="false">
+            <el-menu-item index="3">
               <i class="el-icon-document"></i>
               <span slot="title">查看结果</span>
             </el-menu-item>
@@ -867,7 +867,7 @@
             selected: '',
             running: false,
             btns: [
-                30, 20,10, 5, 3, 1
+                50, 20,10,  3
             ],
             showMask:false,
             showResult:false,
@@ -1321,8 +1321,10 @@
                       prizeName:curPrize.name,
                       results:result
                     };
-                    this.panelStatus = 'result';
+                    // this.panelStatus = 'result';
+                    this.showMask = true;
                   }else{
+                    this.showMask = false;
                     this.result = [];
                     this.$message({
                       message: '该轮抽奖已完成',
@@ -1423,6 +1425,11 @@
               if(!this.canvas){
                 this.initCanvas();
               }
+            }
+
+            if(index == 3){
+              this.panelStatus = 'result';
+              this.showMask = false;
             }
 
             if(index == 4){
