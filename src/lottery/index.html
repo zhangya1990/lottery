@@ -187,7 +187,11 @@
       }
 
       .reward-pepole {
-        margin: 1rem auto 0;
+        margin: 0 auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
         text-align: center;
         font-size: 0.24rem;
         width:1200px;
@@ -414,14 +418,14 @@
 
       .lottery-list{
         flex:1;
-        overflow:auto;
+        position: relative;
       }
       .result-bg{
         margin:0;
-        padding-bottom:0.2rem;
+        padding:0;
         width:100%;
-        background-image:  url('../assets/images/bg-2.jpg');
-        background-size: cover;
+        background-image:  url('../assets/images/bg-2.png');
+        background-size: 100% 100%;
         background-repeat: no-repeat;
         color: orange;
       }
@@ -438,10 +442,14 @@
         overflow: hidden;
       }
       .item-name {
-        width: 2rem;
+        width: 2.7rem;
         display: inline-block;
         line-height: 0.40rem;
         font-size: 0.24rem;
+        color: #fff;
+        background: #1484b4;
+        margin: 0 0.1rem 0.1rem 0;
+        border-radius: 0.04rem;
       }
       .el-table .gutter{
         display: none;
@@ -653,10 +661,10 @@
 
       <!-- lottery results begin -->
       <div class="lottery-list" v-show="panelStatus=='result'">
-        <h1 class="title">{{docTitle}}</h1>
+        <!-- <h1 class="title">{{docTitle}}</h1> -->
         <div id="reward-area" class="reward-pepole row">
           <div class="prize-item">
-            <h2>{{curPrizeResult.prizeName}}</h2>
+            <!-- <h2>{{curPrizeResult.prizeName}}</h2> -->
             <div class="prize-item-result">
               <span class="item-name" v-for="user in curPrizeResult.results" :key="user.id">{{user.id+' '+user.name}}</span>
             </div>
